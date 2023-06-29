@@ -2,16 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "networkSecurityGroups_nsg_db_name": {
-            "defaultValue": "nsg-db",
+        "networkSecurityGroups_nsg_db_stage_name": {
+            "defaultValue": "nsg-db-stage",
             "type": "String"
         },
-        "networkSecurityGroups_nsg_web_name": {
-            "defaultValue": "nsg-web",
+        "networkSecurityGroups_nsg_web_stage_name": {
+            "defaultValue": "nsg-web-stage",
             "type": "String"
         },
-        "virtualNetworks_vnet_shared_westus_name": {
-            "defaultValue": "vnet-shared-westus",
+        "virtualNetworks_vnet_shared_westus_stage_name": {
+            "defaultValue": "vnet-shared-westus-stage",
             "type": "String"
         }
     },
@@ -20,13 +20,13 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2022-11-01",
-            "name": "[parameters('networkSecurityGroups_nsg_db_name')]",
+            "name": "[parameters('networkSecurityGroups_nsg_db_stage_name')]",
             "location": "westeurope",
             "properties": {
                 "securityRules": [
                     {
                         "name": "AllowCidrBlockCustom5432Inbound",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_db_name'), 'AllowCidrBlockCustom5432Inbound')]",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_db_stage_name'), 'AllowCidrBlockCustom5432Inbound')]",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
                             "protocol": "TCP",
@@ -45,7 +45,7 @@
                     },
                     {
                         "name": "AllowMyIpAddressSSHInbound",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_db_name'), 'AllowMyIpAddressSSHInbound')]",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_db_stage_name'), 'AllowMyIpAddressSSHInbound')]",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
                             "protocol": "TCP",
@@ -68,13 +68,13 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2022-11-01",
-            "name": "[parameters('networkSecurityGroups_nsg_web_name')]",
+            "name": "[parameters('networkSecurityGroups_nsg_web_stage_name')]",
             "location": "westeurope",
             "properties": {
                 "securityRules": [
                     {
                         "name": "AllowAnyCustomInbound",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_web_name'), 'AllowAnyCustomInbound')]",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_nsg_web_stage_name'), 'AllowAnyCustomInbound')]",
                         "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                         "properties": {
                             "protocol": "TCP",
@@ -100,9 +100,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('networkSecurityGroups_nsg_web_name'), '/AllowAnyCustomInbound')]",
+            "name": "[concat(parameters('networkSecurityGroups_nsg_web_stage_name'), '/AllowAnyCustomInbound')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_stage_name'))]"
             ],
             "properties": {
                 "protocol": "TCP",
@@ -125,9 +125,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('networkSecurityGroups_nsg_db_name'), '/AllowCidrBlockCustom5432Inbound')]",
+            "name": "[concat(parameters('networkSecurityGroups_nsg_db_stage_name'), '/AllowCidrBlockCustom5432Inbound')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]"
             ],
             "properties": {
                 "protocol": "TCP",
@@ -147,9 +147,9 @@
         {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('networkSecurityGroups_nsg_db_name'), '/AllowMyIpAddressSSHInbound')]",
+            "name": "[concat(parameters('networkSecurityGroups_nsg_db_stage_name'), '/AllowMyIpAddressSSHInbound')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]"
             ],
             "properties": {
                 "protocol": "TCP",
@@ -169,9 +169,9 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_name'), '/default')]",
+            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_stage_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_stage_name'))]"
             ],
             "properties": {
                 "addressPrefix": "10.0.0.0/24",
@@ -183,11 +183,11 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2022-11-01",
-            "name": "[parameters('virtualNetworks_vnet_shared_westus_name')]",
+            "name": "[parameters('virtualNetworks_vnet_shared_westus_stage_name')]",
             "location": "westeurope",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_stage_name'))]"
             ],
             "properties": {
                 "addressSpace": {
@@ -198,7 +198,7 @@
                 "subnets": [
                     {
                         "name": "default",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_name'), 'default')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_stage_name'), 'default')]",
                         "properties": {
                             "addressPrefix": "10.0.0.0/24",
                             "delegations": [],
@@ -209,11 +209,11 @@
                     },
                     {
                         "name": "snet-db",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_name'), 'snet-db')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_stage_name'), 'snet-db')]",
                         "properties": {
                             "addressPrefix": "10.0.1.0/24",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": [],
@@ -224,11 +224,11 @@
                     },
                     {
                         "name": "snet-web",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_name'), 'snet-web')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_vnet_shared_westus_stage_name'), 'snet-web')]",
                         "properties": {
                             "addressPrefix": "10.0.2.0/24",
                             "networkSecurityGroup": {
-                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_name'))]"
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_stage_name'))]"
                             },
                             "serviceEndpoints": [],
                             "delegations": [],
@@ -245,15 +245,15 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_name'), '/snet-db')]",
+            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_stage_name'), '/snet-db')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_stage_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]"
             ],
             "properties": {
                 "addressPrefix": "10.0.1.0/24",
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_name'))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_db_stage_name'))]"
                 },
                 "serviceEndpoints": [],
                 "delegations": [],
@@ -264,15 +264,15 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2022-11-01",
-            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_name'), '/snet-web')]",
+            "name": "[concat(parameters('virtualNetworks_vnet_shared_westus_stage_name'), '/snet-web')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_name'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_vnet_shared_westus_stage_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_stage_name'))]"
             ],
             "properties": {
                 "addressPrefix": "10.0.2.0/24",
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_name'))]"
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_nsg_web_stage_name'))]"
                 },
                 "serviceEndpoints": [],
                 "delegations": [],
