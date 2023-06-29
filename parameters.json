@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkSecurityGroups_nsg_db_prod_name": {
+            "value": null
+        },
+        "networkSecurityGroups_nsg_web_prod_name": {
+            "value": null
+        },
+        "virtualNetworks_vnet_shared_westus_prod_name": {
+            "value": null
+        }
+    }
+}
